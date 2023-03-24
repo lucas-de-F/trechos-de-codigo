@@ -1,0 +1,312 @@
+<mat-dialog-content class="mat-typography">
+    <form (submit)="$event.preventDefault()" [formGroup]="ClienteFormulario">
+        <h2>CLIENTE</h2>
+        <div class="flex flex-wrap">
+            <div class="flex flex-wrap w-full justify-between">
+                <mat-form-field appearance="fill" class="w-[49%] mr-2">
+                    <mat-label>CNPJ</mat-label>
+                    <input
+                        type="text"
+                        formControlName="cnpj"
+                        mask="00.000.000/0000-00"
+                        matInput
+                        #first
+                    />
+                </mat-form-field>
+                <mat-form-field appearance="fill" class="w-[49%]">
+                    <mat-label>NOME</mat-label>
+                    <input type="text" formControlName="nome" matInput #first />
+                </mat-form-field>
+            </div>
+            <div class="flex w-full">
+                <mat-form-field appearance="fill" class="mr-1 w-1/3">
+                    <mat-label>EMPRESA</mat-label>
+                    <mat-select formControlName="empresa_id">
+                        <mat-option
+                            *ngFor="let empresa of empresas"
+                            [value]="empresa.id"
+                        >
+                            {{ empresa.nome }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field appearance="fill" class="mr-1 w-1/3">
+                    <mat-label>CONSULTOR</mat-label>
+                    <mat-select formControlName="consultor_id">
+                        <mat-option
+                            *ngFor="let consultor of consultores"
+                            [value]="consultor.id"
+                        >
+                            {{ consultor.nome }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field appearance="fill" class="mr-1 w-1/3">
+                    <mat-label>UF</mat-label>
+                    <mat-select formControlName="uf">
+                        <mat-option *ngFor="let uf of ufs" [value]="uf.sigla">
+                            {{ uf.sigla }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+        <ng-container>
+            <h2>CONTATOS</h2>
+            <ng-container
+                *ngFor="let contatos of getContatos(ClienteFormulario); let i = index"
+            >
+                <div
+                    class="flex flex-wrap bg-slate-100 p-4 rounded-md"
+                    [formGroup]="contatos"
+                >
+                    <div class="flex w-full">
+                        <mat-form-field appearance="fill" class="mr-1 w-1/3">
+                            <mat-label>CARGO</mat-label>
+                            <input
+                                type="text"
+                                formControlName="cargo"
+                                matInput
+                                #first
+                            />
+                        </mat-form-field>
+                        <mat-form-field appearance="fill" class="mr-1 w-1/3">
+                            <mat-label>NOME</mat-label>
+                            <input
+                                type="text"
+                                formControlName="nome"
+                                matInput
+                                #first
+                            />
+                        </mat-form-field>
+                        <mat-form-field appearance="fill" class="mr-1 w-1/3">
+                            <mat-label>TELEFONE</mat-label>
+                            <input
+                                type="text"
+                                formControlName="telefone"
+                                matInput
+                                mask="(00) 00000-0000"
+                                #first
+                            />
+                        </mat-form-field>
+                    </div>
+                    <mat-form-field appearance="fill" class="w-1/3 mr-1">
+                        <mat-label>EMAIL</mat-label>
+                        <input
+                            type="text"
+                            formControlName="email"
+                            matInput
+                            #first
+                        />
+                    </mat-form-field>
+                    <mat-form-field appearance="fill" class="w-1/3">
+                        <mat-label>OBSERVAÇÃO</mat-label>
+                        <input
+                            type="text"
+                            formControlName="observacao"
+                            matInput
+                            #first
+                        />
+                    </mat-form-field>
+                </div>
+                <div>
+                    <mat-icon
+                        (click)="deleteContato(i)"
+                        *ngIf="ClienteFormulario.value.contatos.length > 1"
+                    >
+                        delete_forever</mat-icon
+                    >
+                    <mat-icon (click)="addContato()"> add </mat-icon>
+                </div>
+            </ng-container>
+        </ng-container>
+
+        <ng-container>
+            <h2>GARAGENS</h2>
+            <ng-container
+                *ngFor="let garagem of getGaragens(ClienteFormulario); let i = index"
+            >
+                <div [formGroup]="garagem">
+                    <div class="flex flex-wrap bg-slate-100 p-4 rounded-md">
+                        <div class="flex w-full">
+                            <mat-form-field
+                                appearance="fill"
+                                class="w-1/4 mr-1"
+                            >
+                                <mat-label>CEP</mat-label>
+                                <input
+                                    type="number"
+                                    (change)="obterCep($event.target, i)"
+                                    formControlName="cep"
+                                    matInput
+                                    #first
+                                />
+                            </mat-form-field>
+                            <mat-form-field
+                                appearance="fill"
+                                class="w-1/3 mr-1"
+                            >
+                                <mat-label>NOME</mat-label>
+                                <input
+                                    type="text"
+                                    formControlName="nome"
+                                    matInput
+                                    #first
+                                />
+                            </mat-form-field>
+                            <mat-form-field appearance="fill" class="w-1/2">
+                                <mat-label>CNPJ</mat-label>
+                                <input
+                                    type="text"
+                                    formControlName="cnpj"
+                                    matInput
+                                    mask="00.000.000/0000-00"
+                                    #first
+                                />
+                            </mat-form-field>
+                        </div>
+                        <div class="flex flex-wrap w-full">
+                            <mat-form-field
+                                appearance="fill"
+                                class="w-1/4 mr-1"
+                            >
+                                <mat-label>ENDEREÇO</mat-label>
+                                <input
+                                    type="text"
+                                    formControlName="endereco"
+                                    matInput
+                                    #first
+                                />
+                            </mat-form-field>
+                            <mat-form-field
+                                appearance="fill"
+                                class="w-1/6 mr-1"
+                            >
+                                <mat-label>COMPLEMENTO</mat-label>
+                                <input
+                                    type="text"
+                                    formControlName="complemento"
+                                    matInput
+                                    #first
+                                />
+                            </mat-form-field>
+                            <mat-form-field
+                                appearance="fill"
+                                class="w-1/6 mr-1"
+                            >
+                                <mat-label>NÚMERO</mat-label>
+                                <input
+                                    type="text"
+                                    formControlName="numero"
+                                    matInput
+                                    mask="9999999999999999999999"
+                                    #first
+                                />
+                            </mat-form-field>
+                            <mat-form-field
+                                appearance="fill"
+                                class="w-1/4 mr-1"
+                            >
+                                <mat-label>MUNICÍPIO</mat-label>
+                                <input
+                                    type="text"
+                                    formControlName="municipio"
+                                    matInput
+                                    #first
+                                />
+                            </mat-form-field>
+                            <mat-form-field
+                                appearance="fill"
+                                class="w-[13.5%] mr-1"
+                            >
+                                <mat-label>UF</mat-label>
+                                <mat-select formControlName="uf_icms">
+                                    <mat-option
+                                        *ngFor="let uf of ufs"
+                                        [value]="uf.sigla"
+                                    >
+                                        {{ uf.sigla }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <div
+                                class="mat-form-field flex items-center cursor-pointer"
+                                (click)="addAcessos(i)"
+                                appearance="fill"
+                            >
+                                <mat-label class="font-medium"
+                                    >ADICIONAR ACESSO</mat-label
+                                >
+                                <mat-icon> add </mat-icon>
+                            </div>
+
+                            <div
+                                formArrayName="acessos"
+                                class="w-full flex flex-col"
+                            >
+                                <div
+                                    [formGroupName]="k"
+                                    class="w-full"
+                                    *ngFor="let acesso of getAcessos(garagem); let k = index"
+                                >
+                                    <mat-form-field
+                                        appearance="fill"
+                                        class="w-1/3 mr-4"
+                                    >
+                                        <mat-icon
+                                            *ngIf="k !== 0"
+                                            mat-icon
+                                            (click)="deleteAcesso(i,k)"
+                                        >
+                                            delete_forever
+                                        </mat-icon>
+                                        <input
+                                            type="text"
+                                            formControlName="acessos"
+                                            matInput
+                                            #first
+                                            placeholder="E-mail de Acesso"
+                                        />
+                                    </mat-form-field>
+                                    <mat-form-field appearance="fill" class="w-1/5">
+                                        <mat-label>Fornecedores</mat-label>
+                                        <mat-select formControlName="fornecedor" (selectionChange)="selecionarId()" matInput>
+                                            <mat-option [value]="''">Não Selecionar</mat-option>
+                                            <mat-option
+                                                *ngFor="let fornecedor of fornecedores"
+                                                [value]="fornecedor.type.toString()"
+                                                [disabled]="fornecedor.type === 'fornecedores'"
+                                            >
+                                                {{ fornecedor.type }}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <mat-icon (click)="addGaragem()"> add</mat-icon>
+                <mat-icon
+                    (click)="deleteGaragem(i)"
+                    *ngIf="ClienteFormulario.value.garagens.length > 1"
+                >
+                    delete_forever</mat-icon
+                >
+            </ng-container>
+            <!-- <div>
+                <mat-icon (click)="addGaragem()"> add </mat-icon>
+            </div> -->
+        </ng-container>
+        <div class="flex justify-end">
+            <button
+                mat-raised-button
+                color="primary"
+                class="block w-40 rounded-md justify-self-end"
+                (click)="onSubmit()"
+            >
+                {{page}}
+            </button>
+        </div>
+    </form>
+</mat-dialog-content>

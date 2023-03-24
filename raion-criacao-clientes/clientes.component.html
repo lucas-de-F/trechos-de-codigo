@@ -1,0 +1,96 @@
+<div class="flex flex-col flex-auto min-w-0">
+    <!-- Main -->
+    <div class="flex-auto p-6 sm:p-10">
+        <div
+            class="w-full flex flex-row justify-center items-center bg-gray-800 p-2 rounded-t-xl"
+        >
+            <div class="flex w-[95%] justify-between items-center">
+                <div class="flex items-center">
+                    <p class="text-xl text-white">CLIENTES</p>
+                    <mat-form-field class="w-50 ml-5 mb-[-15px]">
+                        <input
+                            type="text"
+                            class="rounded-xl w-50"
+                            placeholder="Digite o nome"
+                            matInput
+                            [value]="pesquisaStr"
+                            (input)="pesquisa($event.target.value)"
+                        />
+                    </mat-form-field>
+                </div>
+
+                <button mat-raised-button (click)="dialogoCriacao()">
+                    NOVO
+                </button>
+            </div>
+        </div>
+
+        <div class="flex flex-col justify-end" id="table">
+            <table mat-table [dataSource]="clientes" class="`mat-elevation-z8`">
+                <ng-container matColumnDef="nome">
+                    <th mat-header-cell *matHeaderCellDef class="text-left w-100">
+                        Nome
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="uppercase text-left">
+                        {{ element.nome }}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="cnpj">
+                    <th class="text-center" mat-header-cell *matHeaderCellDef>CNPJ</th>
+                    <td mat-cell *matCellDef="let element">
+                        {{ element.cnpj }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="uf">
+                    <th class="text-center" mat-header-cell *matHeaderCellDef>UF</th>
+                    <td mat-cell *matCellDef="let element">
+                        {{ element.uf }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="createdAt">
+                    <th mat-header-cell *matHeaderCellDef class="capitalize text-center">data criação</th>
+                    <td mat-cell *matCellDef="let element">
+                        {{ element.createdAt | date: "dd-MM-yyyy" }}
+                    </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr
+                    mat-row
+                    *matRowDef="let row; columns: displayedColumns"
+                ></tr>
+                <ng-container matColumnDef="id">
+                    <th class="text-center" mat-header-cell *matHeaderCellDef></th>
+                    <td mat-cell *matCellDef="let element">
+                        <div class="align-center w-[80%]">
+                            <button (click)="deletar(element.id)">
+                                <mat-icon
+                                    color="warn"
+                                    class="cursor-pointer mr-4"
+                                    svgIcon="heroicons_solid:trash"
+                                ></mat-icon>
+                            </button>
+                            <button (click)="dialogoEdicao(element)">
+                                <mat-icon
+                                    color="primary"
+                                    class="cursor-pointer"
+                                    svgIcon="edit_note"
+                                ></mat-icon>
+                            </button>
+                        </div>
+                    </td>
+                </ng-container>
+            </table>
+
+            <mat-paginator
+                class="justify-self-end"
+                #paginator
+                pageSize="10"
+                [pageSizeOptions]="[10]"
+                showFirstLastButtons
+            >
+            </mat-paginator>
+        </div>
+    </div>
+</div>
